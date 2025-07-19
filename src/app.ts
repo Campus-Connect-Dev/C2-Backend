@@ -48,6 +48,7 @@ export class App {
       this.app.use(morgan('combined'));
     }
     
+    // Configure rate limiter for Cloud Run environment
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
       max: 100,
@@ -57,7 +58,20 @@ export class App {
         timestamp: new Date().toISOString()
       },
       standardHeaders: true,
-      legacyHeaders: false
+      legacyHeaders: false,
+      skip: () => {
+        // Skip rate limiting in development
+        return this.configValues['NODE_ENV'] !== 'production';
+      },
+      keyGenerator: (req) => {
+        // Use the last IP in X-Forwarded-For chain when in production (Cloud Run)
+        // or the direct IP in development
+        const forwarded = req.headers['x-forwarded-for'] as string | undefined;
+        const ip = forwarded 
+          ? forwarded.split(',').pop()?.trim() || req.ip
+          : req.ip;
+        return ip || 'unknown'; // Ensure we always return a string
+      }
     });
     
     this.app.use(limiter);
