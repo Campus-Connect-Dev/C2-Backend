@@ -11,6 +11,8 @@ if (!firebaseConfig.projectId || !firebaseConfig.privateKey || !firebaseConfig.c
   throw new Error('Missing required Firebase configuration values.');
 }
 
+console.log('Firebase Config:', firebaseConfig);
+
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(firebaseConfig),
