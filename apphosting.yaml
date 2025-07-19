@@ -7,6 +7,12 @@ runConfig:
   # cpu: 1
   # memoryMiB: 512
 
+# Build configuration
+build:
+  command: |
+    npm install typescript
+    npm run build
+
 # Environment variables and secrets.
 env:
   # Configure environment variables.

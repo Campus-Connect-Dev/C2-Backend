@@ -3,9 +3,11 @@
     "source": ".",
     "runtime": "nodejs18",
     "predeploy": [
+      "npm install -g typescript",
+      "npm install",
       "npm run build"
     ],
-    "ignore": [
+    "ignore": [      
       "node_modules",
       ".git",
       "firebase-debug.log",

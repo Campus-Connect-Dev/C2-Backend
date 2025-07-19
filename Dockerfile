@@ -2,8 +2,11 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Install typescript globally
+RUN npm install -g typescript
+
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --production=false && npm cache clean --force
 
 COPY . .
 RUN npm run build
