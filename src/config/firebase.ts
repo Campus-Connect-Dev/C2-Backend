@@ -1,23 +1,30 @@
 import admin from 'firebase-admin';
-import { config } from './environment';
+import { defineString } from 'firebase-functions/params';
+import { onInit } from 'firebase-functions/v2/core';
 
-const firebaseConfig = {
-  projectId: config.FIREBASE_PROJECT_ID || '',
-  privateKey: config.FIREBASE_PRIVATE_KEY || '',
-  clientEmail: config.FIREBASE_CLIENT_EMAIL || ''
-};
+// Define Firebase Admin SDK parameters as secrets
+const projectId = defineString('FIREBASE_PROJECT_ID');
+const privateKey = defineString('FIREBASE_PRIVATE_KEY');
+const clientEmail = defineString('FIREBASE_CLIENT_EMAIL');
 
-if (!firebaseConfig.projectId || !firebaseConfig.privateKey || !firebaseConfig.clientEmail) {
-  console.log('Firebase Config:', firebaseConfig);
-  throw new Error('Missing required Firebase configuration values.');
-}
+let auth: admin.auth.Auth;
+let firestore: admin.firestore.Firestore;
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(firebaseConfig),
-    projectId: firebaseConfig.projectId,
-  });
-}
+// Initialize Firebase Admin SDK in the onInit callback
+onInit(() => {
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: projectId.value(),
+        privateKey: privateKey.value().replace(/\\n/g, '\n'),
+        clientEmail: clientEmail.value()
+      }),
+      projectId: projectId.value(),
+    });
+  }
 
-export const auth = admin.auth();
-export const firestore = admin.firestore();
+  auth = admin.auth();
+  firestore = admin.firestore();
+});
+
+export { auth, firestore };
