@@ -2,9 +2,9 @@ import admin from 'firebase-admin';
 import { config } from './environment';
 
 const firebaseConfig = {
-  projectId: process.env['FIREBASE_CONFIG_PROJECT_ID'] || config.fbConfig?.project_id || '',
-  privateKey: (process.env['FIREBASE_CONFIG_PRIVATE_KEY'] || config.fbConfig?.private_key || '').replace(/\\n/g, '\n'),
-  clientEmail: process.env['FIREBASE_CONFIG_CLIENT_EMAIL'] || config.fbConfig?.client_email || '',
+  projectId: process.env['FIREBASE_CONFIG_PROJECT_ID'] || config.fb?.project_id || '',
+  privateKey: (process.env['FIREBASE_CONFIG_PRIVATE_KEY'] || config.fb?.private_key || '').replace(/\\n/g, '\n'),
+  clientEmail: process.env['FIREBASE_CONFIG_CLIENT_EMAIL'] || config.fb?.client_email || '',
 };
 
 if (!firebaseConfig.projectId || !firebaseConfig.privateKey || !firebaseConfig.clientEmail) {
