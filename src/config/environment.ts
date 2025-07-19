@@ -39,96 +39,32 @@ if (isFirebaseFunction) {
   // Debug: Log the entire config structure
   console.log('Firebase Functions Config Structure:', JSON.stringify(fb, null, 2));
   
-  // Try different possible config structures
-  const appConfig = fb.app || fb;
-  const firebaseConfig = fb.firebase || fb;
-  
-  console.log('App Config:', appConfig);
-  console.log('Firebase Config:', firebaseConfig);
-  
   config = {
-    NODE_ENV: getNestedValue(fb, 'app.node_env') || 
-              getNestedValue(fb, 'node_env') || 
-              'production',
-              
-    PORT: parseInt(
-      getNestedValue(fb, 'app.port') || 
-      getNestedValue(fb, 'port') || 
-      '3001', 10
-    ),
+    NODE_ENV: getNestedValue(fb, 'app.node_env') || 'production',
+    PORT: parseInt(getNestedValue(fb, 'app.port') || '3001', 10),
+    API_VERSION: getNestedValue(fb, 'app.api_version') || 'v1',
     
-    API_VERSION: getNestedValue(fb, 'app.api_version') || 
-                 getNestedValue(fb, 'api_version') || 
-                 'v1',
+    // Firebase Admin SDK - read from fb namespace
+    FIREBASE_PROJECT_ID: getNestedValue(fb, 'fb.project_id') || '',
+    FIREBASE_PRIVATE_KEY: (getNestedValue(fb, 'fb.private_key') || '').replace(/\\n/g, '\n'),
+    FIREBASE_CLIENT_EMAIL: getNestedValue(fb, 'fb.client_email') || '',
     
-    // Firebase Admin SDK - try multiple possible paths
-    FIREBASE_PROJECT_ID: getNestedValue(fb, 'firebase.project_id') ||
-                         getNestedValue(fb, 'project_id') ||
-                         getNestedValue(fb, 'firebase.project.id') ||
-                         '',
-                         
-    FIREBASE_PRIVATE_KEY: (
-      getNestedValue(fb, 'firebase.private_key') ||
-      getNestedValue(fb, 'private_key') ||
-      getNestedValue(fb, 'firebase.private.key') ||
-      ''
-    ).replace(/\\n/g, '\n'),
-    
-    FIREBASE_CLIENT_EMAIL: getNestedValue(fb, 'firebase.client_email') ||
-                          getNestedValue(fb, 'client_email') ||
-                          getNestedValue(fb, 'firebase.client.email') ||
-                          '',
-    
-    // Firebase Web SDK
-    FIREBASE_API_KEY: getNestedValue(fb, 'firebase.web_api_key') ||
-                     getNestedValue(fb, 'firebase.api_key') ||
-                     getNestedValue(fb, 'web_api_key') ||
-                     getNestedValue(fb, 'api_key') ||
-                     '',
-                     
-    FIREBASE_AUTH_DOMAIN: getNestedValue(fb, 'firebase.auth_domain') ||
-                         getNestedValue(fb, 'firebase.auth.domain') ||
-                         getNestedValue(fb, 'auth_domain') ||
-                         '',
-                         
-    FIREBASE_STORAGE_BUCKET: getNestedValue(fb, 'firebase.storage_bucket') ||
-                            getNestedValue(fb, 'firebase.storage.bucket') ||
-                            getNestedValue(fb, 'storage_bucket') ||
-                            '',
-                            
-    FIREBASE_MESSAGING_SENDER_ID: getNestedValue(fb, 'firebase.messaging_sender_id') ||
-                                 getNestedValue(fb, 'firebase.messaging.sender.id') ||
-                                 getNestedValue(fb, 'messaging_sender_id') ||
-                                 '',
-                                 
-    FIREBASE_APP_ID: getNestedValue(fb, 'firebase.app_id') ||
-                    getNestedValue(fb, 'firebase.app.id') ||
-                    getNestedValue(fb, 'app_id') ||
-                    '',
-                    
-    FIREBASE_MEASUREMENT_ID: getNestedValue(fb, 'firebase.measurement_id') ||
-                            getNestedValue(fb, 'firebase.measurement.id') ||
-                            getNestedValue(fb, 'measurement_id') ||
-                            '',
+    // Firebase Web SDK - read from fb namespace
+    FIREBASE_API_KEY: getNestedValue(fb, 'fb.web_api_key') || '',
+    FIREBASE_AUTH_DOMAIN: getNestedValue(fb, 'fb.auth_domain') || '',
+    FIREBASE_STORAGE_BUCKET: getNestedValue(fb, 'fb.storage_bucket') || '',
+    FIREBASE_MESSAGING_SENDER_ID: getNestedValue(fb, 'fb.messaging_sender_id') || '',
+    FIREBASE_APP_ID: getNestedValue(fb, 'fb.app_id') || '',
+    FIREBASE_MEASUREMENT_ID: getNestedValue(fb, 'fb.measurement_id') || '',
     
     fb: {
-      project_id: getNestedValue(fb, 'firebase.project_id') ||
-                  getNestedValue(fb, 'project_id') ||
-                  '',
-                  
-      private_key: (
-        getNestedValue(fb, 'firebase.private_key') ||
-        getNestedValue(fb, 'private_key') ||
-        ''
-      ).replace(/\\n/g, '\n'),
-      
-      client_email: getNestedValue(fb, 'firebase.client_email') ||
-                   getNestedValue(fb, 'client_email') ||
-                   '',
+      project_id: getNestedValue(fb, 'fb.project_id') || '',
+      private_key: (getNestedValue(fb, 'fb.private_key') || '').replace(/\\n/g, '\n'),
+      client_email: getNestedValue(fb, 'fb.client_email') || '',
     },
   };
-  
-  // Debug: Log what we extracted
+
+  // Debug logging
   console.log('Extracted Config:', {
     ...config,
     FIREBASE_PRIVATE_KEY: config.FIREBASE_PRIVATE_KEY ? '[REDACTED]' : 'MISSING',

@@ -2,22 +2,20 @@ import admin from 'firebase-admin';
 import { config } from './environment';
 
 const firebaseConfig = {
-  projectId: process.env['FIREBASE_CONFIG_PROJECT_ID'] || config.fb?.project_id || '',
-  privateKey: (process.env['FIREBASE_CONFIG_PRIVATE_KEY'] || config.fb?.private_key || '').replace(/\\n/g, '\n'),
-  clientEmail: process.env['FIREBASE_CONFIG_CLIENT_EMAIL'] || config.fb?.client_email || '',
+  projectId: config.FIREBASE_PROJECT_ID || '',
+  privateKey: config.FIREBASE_PRIVATE_KEY || '',
+  clientEmail: config.FIREBASE_CLIENT_EMAIL || ''
 };
 
 if (!firebaseConfig.projectId || !firebaseConfig.privateKey || !firebaseConfig.clientEmail) {
-console.log('Firebase Config:', firebaseConfig);
+  console.log('Firebase Config:', firebaseConfig);
   throw new Error('Missing required Firebase configuration values.');
 }
-
-console.log('Firebase Config:', firebaseConfig);
 
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(firebaseConfig),
-    projectId: config.FIREBASE_PROJECT_ID,
+    projectId: firebaseConfig.projectId,
   });
 }
 
