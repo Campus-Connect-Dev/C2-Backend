@@ -1,6 +1,6 @@
 import { defineString, defineInt } from 'firebase-functions/params';
 
-export interface EnvConfig {
+export type ConfigType = {
   NODE_ENV: string;
   PORT: number;
   API_VERSION: string;
@@ -13,7 +13,7 @@ export interface EnvConfig {
   FIREBASE_MESSAGING_SENDER_ID: string;
   FIREBASE_APP_ID: string;
   FIREBASE_MEASUREMENT_ID: string;
-}
+};
 
 // Define parameters
 const nodeEnv = defineString('NODE_ENV', { default: 'production' });
@@ -33,7 +33,7 @@ const fbMessagingSenderId = defineString('FIREBASE_MESSAGING_SENDER_ID');
 const fbAppId = defineString('FIREBASE_APP_ID');
 const fbMeasurementId = defineString('FIREBASE_MEASUREMENT_ID');
 
-export const config: EnvConfig = {
+export const config: ConfigType = {
   NODE_ENV: nodeEnv.value(),
   PORT: port.value(),
   API_VERSION: apiVersion.value(),
@@ -46,4 +46,4 @@ export const config: EnvConfig = {
   FIREBASE_MESSAGING_SENDER_ID: fbMessagingSenderId.value(),
   FIREBASE_APP_ID: fbAppId.value(),
   FIREBASE_MEASUREMENT_ID: fbMeasurementId.value(),
-};
+} as const;

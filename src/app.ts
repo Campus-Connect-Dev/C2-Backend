@@ -4,15 +4,18 @@ import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import { config } from './config/environment';
+import { config, type ConfigType } from './config/environment';
 import { apiRoutes } from './routes';
 import { errorHandler, notFoundHandler } from './middleware';
 
 export class App {
   private app: Application;
+  private readonly configValues: ConfigType;
 
   constructor() {
     this.app = express();
+    this.configValues = config;
+    this.app.set('trust proxy', true);
     this.initializeMiddlewares();
     this.initializeRoutes();
     this.initializeErrorHandling();
@@ -21,8 +24,17 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(helmet());
     
+    const allowedOrigins = this.configValues['NODE_ENV'] === 'production' 
+      ? [
+          'https://c2-backend-dev--campus-connect-aab7a.europe-west4.hosted.app',
+          'https://t-2758513072---c2-backend-dev-npy5oocw4q-ez.a.run.app',
+          'https://campus-connect-aab7a.web.app',
+          'https://campus-connect-aab7a.firebaseapp.com'
+        ]
+      : true;
+
     this.app.use(cors({
-      origin: config.NODE_ENV === 'production' ? false : true,
+      origin: allowedOrigins,
       credentials: true
     }));
     
@@ -30,7 +42,7 @@ export class App {
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
     
-    if (config.NODE_ENV === 'development') {
+    if (this.configValues['NODE_ENV'] === 'development') {
       this.app.use(morgan('dev'));
     } else {
       this.app.use(morgan('combined'));
@@ -43,7 +55,9 @@ export class App {
         success: false,
         message: 'Too many requests from this IP, please try again later.',
         timestamp: new Date().toISOString()
-      }
+      },
+      standardHeaders: true,
+      legacyHeaders: false
     });
     
     this.app.use(limiter);
@@ -63,10 +77,12 @@ export class App {
   }
 
   public listen(): void {
-    this.app.listen(config.PORT, () => {
-      console.log(` Campus Connect Backend running on port ${config.PORT}`);
-      console.log(` Environment: ${config.NODE_ENV}`);
-      console.log(` Health check: http://localhost:${config.PORT}/api/${config.API_VERSION}/health`);
+    const serverPort = process.env['PORT'] ? parseInt(process.env['PORT'], 10) : this.configValues['PORT'];
+    
+    this.app.listen(serverPort, () => {
+      console.log(` Campus Connect Backend running on port ${serverPort}`);
+      console.log(` Environment: ${this.configValues['NODE_ENV']}`);
+      console.log(` Health check: http://localhost:${serverPort}/api/${this.configValues['API_VERSION']}/health`);
     });
   }
 }
