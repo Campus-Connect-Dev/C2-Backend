@@ -8,6 +8,7 @@ const firebaseConfig = {
 };
 
 if (!firebaseConfig.projectId || !firebaseConfig.privateKey || !firebaseConfig.clientEmail) {
+console.log('Firebase Config:', firebaseConfig);
   throw new Error('Missing required Firebase configuration values.');
 }
 
