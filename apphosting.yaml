@@ -1,22 +1,20 @@
-# Settings for Backend (on Cloud Run).
-# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+# Settings for Backend (on Cloud Run)
 runConfig:
   minInstances: 0
-  # maxInstances: 100
-  # concurrency: 80
-  # cpu: 1
-  # memoryMiB: 512
 
 # Build configuration
 build:
-  command: |
-    npm install typescript
-    npm run build
-
-# Environment variables and secrets.
+  # Install all dependencies including devDependencies and build
+  steps:
+    - name: 'node:18'
+      env:
+        - 'NODE_ENV=development'
+      script: |
+        npm ci
+        npm run build
+      
+# Environment variables and secrets
 env:
-  # Configure environment variables.
-  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
   - variable: NODE_ENV
     value: "production"
     availability:

@@ -2,25 +2,31 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install typescript globally
-RUN npm install -g typescript
-
+# Copy package files first for better caching
 COPY package*.json ./
-RUN npm ci --production=false && npm cache clean --force
 
+# Install all dependencies including devDependencies
+RUN npm ci --production=false
+
+# Copy source files
 COPY . .
+
+# Run the build
 RUN npm run build
 
 FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
 
+# Copy only necessary files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package*.json ./
+
+# Install only production dependencies
+RUN npm ci --omit=dev && npm cache clean --force
 
 USER nodejs
 
