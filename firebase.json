@@ -33,7 +33,7 @@
     ]
   },
   "apphosting": {
-    "backendId": "c2-backend-api",
+    "backendId": "c2-backend-dev",
     "rootDir": "/",
     "ignore": [
       "node_modules",
@@ -41,6 +41,12 @@
       "firebase-debug.log",
       "firebase-debug.*.log",
       "functions"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.js"
+      }
     ]
   }
 }

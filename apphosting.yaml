@@ -1,6 +1,7 @@
 # Settings for Backend (on Cloud Run)
 runConfig:
   minInstances: 0
+  port: 8080
 
 # Build configuration
 build:
@@ -21,4 +22,8 @@ env_variables:
   PORT: "8080"
   NODE_ENV: "production"
   API_VERSION: "v1"
+
+handlers:
+  - url: /.*
+    script: auto
 
