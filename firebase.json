@@ -2,7 +2,9 @@
   "functions": {
     "source": ".",
     "runtime": "nodejs18",
-    "predeploy": ["npm run build"],
+    "predeploy": [
+      "npm run build"
+    ],
     "ignore": [
       "node_modules",
       ".git",
@@ -16,7 +18,6 @@
     ]
   },
   "hosting": {
-    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -27,6 +28,17 @@
         "source": "/api/**",
         "function": "api"
       }
+    ]
+  },
+  "apphosting": {
+    "backendId": "c2-backend-api",
+    "rootDir": "/",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "functions"
     ]
   }
 }

@@ -138,6 +138,13 @@ if (isFirebaseFunction) {
     }
   });
   
+  console.log('functions.config():', JSON.stringify(functions.config(), null, 2));
+  console.log('Extracted Config:', {
+    FIREBASE_PROJECT_ID: process.env['FB_PROJECT_ID'] || '',
+    FIREBASE_PRIVATE_KEY: process.env['FB_PRIVATE_KEY'] ? '[REDACTED]' : 'MISSING',
+    FIREBASE_CLIENT_EMAIL: process.env['FB_CLIENT_EMAIL'] || 'MISSING',
+  });
+  
 } else {
   // Running locally - use dotenv
   if (typeof require !== 'undefined') {
