@@ -28,6 +28,7 @@ let config: EnvConfig;
 if (isFirebaseFunction) {
   // Running in Firebase Functions - use functions.config()
   const fb = functions.config() as any;
+  console.log('Firebase Functions Config:', fb);
   
   config = {
     NODE_ENV: fb['app']?.['node_env'] || 'production',
