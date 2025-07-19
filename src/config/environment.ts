@@ -13,7 +13,7 @@ export interface EnvConfig {
   FIREBASE_MESSAGING_SENDER_ID: string;
   FIREBASE_APP_ID: string;
   FIREBASE_MEASUREMENT_ID: string;
-  fbConfig?: {
+  fb?: {
     project_id: string;
     private_key: string;
     client_email: string;
@@ -46,7 +46,7 @@ if (isFirebaseFunction) {
     FIREBASE_MESSAGING_SENDER_ID: fb['firebase']?.['messaging_sender_id'] || '',
     FIREBASE_APP_ID: fb['firebase']?.['app_id'] || '',
     FIREBASE_MEASUREMENT_ID: fb['firebase']?.['measurement_id'] || '',
-    fbConfig: {
+    fb: {
       project_id: fb['firebase']?.['project_id'] || '',
       private_key: (fb['firebase']?.['private_key'] || '').replace(/\\n/g, '\n'),
       client_email: fb['firebase']?.['client_email'] || '',
@@ -73,7 +73,7 @@ if (isFirebaseFunction) {
     FIREBASE_MESSAGING_SENDER_ID: process.env['FIREBASE_MESSAGING_SENDER_ID'] || '',
     FIREBASE_APP_ID: process.env['FIREBASE_APP_ID'] || '',
     FIREBASE_MEASUREMENT_ID: process.env['FIREBASE_MEASUREMENT_ID'] || '',
-    fbConfig: {
+    fb: {
       project_id: process.env['FIREBASE_PROJECT_ID'] || '',
       private_key: (process.env['FIREBASE_PRIVATE_KEY'] || '').replace(/\\n/g, '\n'),
       client_email: process.env['FIREBASE_CLIENT_EMAIL'] || '',
