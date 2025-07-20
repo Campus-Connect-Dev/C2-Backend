@@ -22,6 +22,8 @@ env_variables:
   PORT: "8080"
   NODE_ENV: "production"
   API_VERSION: "v1"
+  FIREBASE_STORAGE_BUCKET: "campus-connect-aab7a.firebasestorage.app"
+  
 
 handlers:
   - url: /.*
