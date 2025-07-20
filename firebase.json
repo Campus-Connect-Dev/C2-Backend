@@ -11,8 +11,11 @@
     ],
     "rewrites": [
       {
-        "source": "/**",
-        "destination": "/index.js"
+        "source": "/api/**",
+        "run":{
+          "serviceId": "c2-backend-dev",
+          "region": "europe-west4"
+        }
       }
     ]
   }
