@@ -23,9 +23,9 @@ router.get('/check', (_req, res) => {
   });
   
 
-router.use(`/api/v2`, healthRoutes);
-router.use(`/api/${config.API_VERSION}`, authRoutes);
-router.use(`/api/${config.API_VERSION}/config`, configRoutes);
+router.use(`/api/v1`, healthRoutes);
+router.use(`/api/v1`, authRoutes);
+router.use(`/api/v1/config`, configRoutes);
 
 // Catch-all debug route for diagnostics
 router.all('*', (req, res) => {
