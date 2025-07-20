@@ -1,39 +1,36 @@
 import admin from 'firebase-admin';
-import { onInit } from 'firebase-functions/v2/core';
 
-// Define Firebase Admin SDK parameters as secrets
-// const projectId = defineString('FIREBASE_PROJECT_ID');
-// const privateKey = defineString('FIREBASE_PRIVATE_KEY');
-// const clientEmail = defineString('FIREBASE_CLIENT_EMAIL');
+// Initialize Firebase Admin SDK directly (not using firebase-functions onInit)
+if (!admin.apps.length) {
+  const projectId = process.env['FIREBASE_PROJECT_ID'] || '';
+  const clientEmail = process.env['FIREBASE_CLIENT_EMAIL'] || '';
+  const privateKey = process.env['FIREBASE_PRIVATE_KEY']
+    ? process.env['FIREBASE_PRIVATE_KEY'].replace(/\\n/g, '\n')
+    : '';
 
-// console.log('Firebase Admin Config:', projectId,privateKey,clientEmail);
+  console.log('Initializing Firebase Admin with:');
+  console.log('Project ID:', projectId);
+  console.log('Client Email:', clientEmail);
+  console.log('Private Key Length:', privateKey.length);
 
-let auth: admin.auth.Auth;
-let firestore: admin.firestore.Firestore;
-
-// Initialize Firebase Admin SDK in the onInit callback
-onInit(() => {
-  if (!admin.apps.length) {
-    const pid = process.env['FIREBASE_PROJECT_ID'] || '';
-    const email = process.env['FIREBASE_CLIENT_EMAIL'] || '';
-    const key = process.env['FIREBASE_PRIVATE_KEY'] ? process.env['FIREBASE_PRIVATE_KEY'].replace(/\\n/g, '\n') : '';
-  
-    console.log('Initializing Firebase Admin with:');
-    console.log('Project ID:', pid);
-    console.log('Client Email:', email);
-  
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: pid,
-        privateKey: key,
-        clientEmail: email,
-      }),
-      projectId: pid,
-    });
+  // Validate required credentials
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error('Missing Firebase Admin credentials. Please check environment variables.');
   }
-  
-  auth = admin.auth();
-  firestore = admin.firestore();
-});
 
-export { auth, firestore };
+  // Initialize Firebase Admin
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId,
+      clientEmail,
+      privateKey,
+    }),
+    projectId,
+  });
+
+  console.log('✅ Firebase Admin initialized successfully');
+}
+
+// Export Firebase services
+export const auth = admin.auth();
+export const firestore = admin.firestore();
