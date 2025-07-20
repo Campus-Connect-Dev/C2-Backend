@@ -12,11 +12,12 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "run":{
+        "run": {
           "serviceId": "c2-backend-dev",
           "region": "europe-west4"
         }
       }
-    ]
+    ],
+    "alwaysDeployFromSource": true
   }
 }
