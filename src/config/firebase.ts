@@ -7,6 +7,8 @@ const projectId = defineString('FIREBASE_PROJECT_ID');
 const privateKey = defineString('FIREBASE_PRIVATE_KEY');
 const clientEmail = defineString('FIREBASE_CLIENT_EMAIL');
 
+console.log('Firebase Admin Config:', projectId,privateKey,clientEmail);
+
 let auth: admin.auth.Auth;
 let firestore: admin.firestore.Firestore;
 
