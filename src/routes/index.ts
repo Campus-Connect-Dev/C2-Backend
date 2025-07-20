@@ -14,6 +14,14 @@ router.get('/', (_req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+router.get('/check', (_req, res) => {
+    res.status(200).json({
+      success: true,
+      message: '🎓 Welcome to Check it is successful',
+      timestamp: new Date().toISOString()
+    });
+  });
+  
 
 router.use(`/api/${config.API_VERSION}`, healthRoutes);
 router.use(`/api/${config.API_VERSION}`, authRoutes);
