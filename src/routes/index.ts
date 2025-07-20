@@ -19,4 +19,13 @@ router.use(`/api/${config.API_VERSION}`, healthRoutes);
 router.use(`/api/${config.API_VERSION}`, authRoutes);
 router.use(`/api/${config.API_VERSION}/config`, configRoutes);
 
+// Catch-all debug route for diagnostics
+router.all('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found (debug catch-all)`,
+    timestamp: new Date().toISOString()
+  });
+});
+
 export { router as apiRoutes };
