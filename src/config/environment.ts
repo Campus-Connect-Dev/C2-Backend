@@ -47,3 +47,5 @@ export const config: ConfigType = {
   FIREBASE_APP_ID: fbAppId.value(),
   FIREBASE_MEASUREMENT_ID: fbMeasurementId.value(),
 } as const;
+
+console.log('Config loaded:', config);

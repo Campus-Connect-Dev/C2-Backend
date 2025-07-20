@@ -1,32 +1,28 @@
 import admin from 'firebase-admin';
-import { defineString } from 'firebase-functions/params';
-import { onInit } from 'firebase-functions/v2/core';
 
-// Define Firebase Admin SDK parameters as secrets
-const projectId = defineString('FIREBASE_PROJECT_ID');
-const privateKey = defineString('FIREBASE_PRIVATE_KEY');
-const clientEmail = defineString('FIREBASE_CLIENT_EMAIL');
+// Get Firebase config from environment variables
+// These are set in apphosting.yaml for production and can be set locally
+const firebaseConfig = {
+  projectId: process.env['FIREBASE_PROJECT_ID']!,
+  privateKey: process.env['FIREBASE_PRIVATE_KEY']!.replace(/\\n/g, '\n'),
+  clientEmail: process.env['FIREBASE_CLIENT_EMAIL']!,
+};
 
-console.log('Firebase Admin Config:', projectId,privateKey,clientEmail);
+// Log configuration details for debugging
+console.log('Firebase Admin Config - Project ID:', firebaseConfig.projectId);
+console.log('Firebase Admin Config - Client Email:', firebaseConfig.clientEmail);
 
-let auth: admin.auth.Auth;
-let firestore: admin.firestore.Firestore;
+// Initialize Firebase Admin SDK immediately (not in onInit callback)
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(firebaseConfig),
+    projectId: firebaseConfig.projectId,
+  });
+  console.log('✅ Firebase Admin SDK initialized successfully');
+} else {
+  console.log('✅ Firebase Admin SDK already initialized');
+}
 
-// Initialize Firebase Admin SDK in the onInit callback
-onInit(() => {
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: projectId.value(),
-        privateKey: privateKey.value().replace(/\\n/g, '\n'),
-        clientEmail: clientEmail.value()
-      }),
-      projectId: projectId.value(),
-    });
-  }
-
-  auth = admin.auth();
-  firestore = admin.firestore();
-});
-
-export { auth, firestore };
+// Export auth and firestore instances
+export const auth = admin.auth();
+export const firestore = admin.firestore();
