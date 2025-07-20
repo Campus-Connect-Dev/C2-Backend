@@ -84,6 +84,14 @@ export class App {
   private initializeErrorHandling(): void {
     this.app.use(notFoundHandler);
     this.app.use(errorHandler);
+    // Catch-all debug route for diagnostics (should be last)
+    this.app.all('*', (req, res) => {
+      res.status(404).json({
+        success: false,
+        message: `Route ${req.originalUrl} not found (debug catch-all here)`,
+        timestamp: new Date().toISOString()
+      });
+    });
   }
 
   public getApp(): Application {
