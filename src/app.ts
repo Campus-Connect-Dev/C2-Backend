@@ -78,7 +78,7 @@ export class App {
   }
 
   private initializeRoutes(): void {
-    this.app.use('/', apiRoutes);
+    this.app.use(apiRoutes);
   }
 
   private initializeErrorHandling(): void {
