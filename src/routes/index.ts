@@ -23,7 +23,7 @@ router.get('/check', (_req, res) => {
   });
   
 
-router.use(`/api/${config.API_VERSION}`, healthRoutes);
+router.use(`/api/v2`, healthRoutes);
 router.use(`/api/${config.API_VERSION}`, authRoutes);
 router.use(`/api/${config.API_VERSION}/config`, configRoutes);
 
