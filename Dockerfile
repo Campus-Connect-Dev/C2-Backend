@@ -30,9 +30,9 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 USER nodejs
 
-EXPOSE 8080
+EXPOSE 3001
 
 ENV NODE_ENV=production
-ENV PORT=8080
+ENV PORT=3001
 
 CMD ["node", "dist/index.js"]
