@@ -1,28 +1,40 @@
 import admin from 'firebase-admin';
+import { defineString } from 'firebase-functions/params';
+import { onInit } from 'firebase-functions/v2/core';
 
-// Get Firebase config from environment variables
-// These are set in apphosting.yaml for production and can be set locally
-const firebaseConfig = {
-  projectId: process.env['FIREBASE_PROJECT_ID']!,
-  privateKey: process.env['FIREBASE_PRIVATE_KEY']!.replace(/\\n/g, '\n'),
-  clientEmail: process.env['FIREBASE_CLIENT_EMAIL']!,
-};
+// Define Firebase Admin SDK parameters as secrets
+const projectId = defineString('FIREBASE_PROJECT_ID');
+const privateKey = defineString('FIREBASE_PRIVATE_KEY');
+const clientEmail = defineString('FIREBASE_CLIENT_EMAIL');
 
-// Log configuration details for debugging
-console.log('Firebase Admin Config - Project ID:', firebaseConfig.projectId);
-console.log('Firebase Admin Config - Client Email:', firebaseConfig.clientEmail);
+console.log('Firebase Admin Config:', projectId,privateKey,clientEmail);
 
-// Initialize Firebase Admin SDK immediately (not in onInit callback)
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(firebaseConfig),
-    projectId: firebaseConfig.projectId,
-  });
-  console.log('✅ Firebase Admin SDK initialized successfully');
-} else {
-  console.log('✅ Firebase Admin SDK already initialized');
-}
+let auth: admin.auth.Auth;
+let firestore: admin.firestore.Firestore;
 
-// Export auth and firestore instances
-export const auth = admin.auth();
-export const firestore = admin.firestore();
+// Initialize Firebase Admin SDK in the onInit callback
+onInit(() => {
+  if (!admin.apps.length) {
+    const pid = projectId.value();
+    const email = clientEmail.value();
+    const key = privateKey.value().replace(/\\n/g, '\n');
+  
+    console.log('Initializing Firebase Admin with:');
+    console.log('Project ID:', pid);
+    console.log('Client Email:', email);
+  
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: pid,
+        privateKey: key,
+        clientEmail: email,
+      }),
+      projectId: pid,
+    });
+  }
+  
+  auth = admin.auth();
+  firestore = admin.firestore();
+});
+
+export { auth, firestore };
