@@ -1,17 +1,5 @@
 import { defineString, defineInt } from 'firebase-functions/params';
 
-console.log('process.env.FIREBASE_PROJECT_ID:', process.env['FIREBASE_PROJECT_ID']);
-console.log('process.env.FIREBASE_PRIVATE_KEY:', process.env['FIREBASE_PRIVATE_KEY']);    
-console.log('process.env.FIREBASE_CLIENT_EMAIL:', process.env['FIREBASE_CLIENT_EMAIL']);
-console.log('process.env.FIREBASE_API_KEY:', process.env['FIREBASE_API_KEY']);
-console.log('process.env.FIREBASE_AUTH_DOMAIN:', process.env['FIREBASE_AUTH_DOMAIN']);
-console.log('process.env.FIREBASE_STORAGE_BUCKET:', process.env['FIREBASE_STORAGE_BUCKET']);
-console.log('process.env.FIREBASE_MESSAGING_SENDER_ID:', process.env['FIREBASE_MESSAGING_SENDER_ID']);
-console.log('process.env.FIREBASE_APP_ID:', process.env['FIREBASE_APP_ID']);
-console.log('process.env.FIREBASE_MEASUREMENT_ID:', process.env['FIREBASE_MEASUREMENT_ID']);
-console.log('process.env.NODE_ENV:', process.env['NODE_ENV']);
-console.log('process.env.PORT:', process.env['PORT']);
-
 export type ConfigType = {
   NODE_ENV: string;
   PORT: number;
