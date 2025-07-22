@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon src/index.ts",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
+    "postinstall": "npm run build",
     "demo": "http-server . -p 3001 -c-1 --cors",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
